@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using CacheLibrary.Utility;
 
 namespace Example
@@ -7,8 +8,9 @@ namespace Example
     {
         static void Main(string[] args)
         {
-            var source = "Example";
-            var hash = new Hash().GenerateMd5HashFromKey(source);
+            string source = "Chad";
+            byte[] bytes = Encoding.ASCII.GetBytes(source); 
+            var hash = new Hash().GenerateMd5HashFromKey(bytes);
 
             Console.WriteLine($"The MD5 hash of '{source}' is: {hash}");
         }
