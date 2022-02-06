@@ -21,5 +21,10 @@ namespace CacheLibrary.Core
         {
             return _pairs[keyHashed];
         }
+
+        public bool Contains(string keyHashed)
+        {
+            return _pairs.ContainsKey(keyHashed);
+        }
     }
 }

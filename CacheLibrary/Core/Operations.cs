@@ -16,9 +16,12 @@ namespace CacheLibrary.Core
         
         public (string, Exception) Get(string key)
         {
-            byte[] keyBytes = Encoding.ASCII.GetBytes(key);
             var hash = new Hash();
-            var hashedKey = hash.GenerateMd5HashFromKey(keyBytes);
+            var hashedKey = hash.GenerateMd5HashFromKey(key.GetBytes());
+            if (!_cache.Contains(hashedKey))
+            {
+                return ("Error", new Exception("The key doesn't exist"));
+            }
             
             var pair = _cache.Access(hashedKey);
             string value = Encoding.ASCII.GetString(pair.Value);
@@ -27,13 +30,15 @@ namespace CacheLibrary.Core
 
         public (bool, Exception) Upsert(string key, byte[] value, int ttl)
         {
-            byte[] bytes = Encoding.ASCII.GetBytes(key);
             var hash = new Hash();
-            var hashedKey = hash.GenerateMd5HashFromKey(bytes);
-            
-            DateTime now = DateTime.Now;
-            _cache.Add(hashedKey, new Pair(ttl, now, value));
-            return (true, null);
+            var hashedKey = hash.GenerateMd5HashFromKey(key.GetBytes());
+            if (!_cache.Contains(hashedKey))
+            {
+                DateTime now = DateTime.Now;
+                _cache.Add(hashedKey, new Pair(ttl, now, value));
+                return (true, null);
+            }
+            return (false, null);
         }
 
         public (bool, Exception) Delete(string key)
@@ -41,9 +46,9 @@ namespace CacheLibrary.Core
             throw new NotImplementedException();
         }
 
-        public (bool, Exception) Exists(string key)
+        public bool Exists(string key)
         {
-            throw new NotImplementedException();
+            return _cache.Contains(key);
         }
     }
 }
