@@ -1,11 +1,12 @@
 using System;
 using System.Text;
 using CacheLibrary.Interfaces;
+using CacheLibrary.Responses;
 using CacheLibrary.Utility;
 
 namespace CacheLibrary.Core
 {
-    public class Operations: IOperations
+    public class Operations : IOperations
     {
         private readonly Cache _cache;
 
@@ -13,35 +14,37 @@ namespace CacheLibrary.Core
         {
             _cache = new Cache();
         }
-        
-        public (string, Exception) Get(string key)
+
+        public OperationResult<string> Get(string key)
         {
             var hash = new Hash();
             var hashedKey = hash.GenerateMd5HashFromKey(key.GetBytes());
-            if (!_cache.Contains(hashedKey))
+            if (!this.Exists(hashedKey))
             {
-                return ("Error", new Exception("The key doesn't exist"));
+                return OperationResult<string>.CreateFailure("The given key doesn't exist");
             }
-            
+
             var pair = _cache.Access(hashedKey);
             string value = Encoding.ASCII.GetString(pair.Value);
-            return (value, null);
+            return OperationResult<string>.CreateSuccessResult(value);
         }
 
-        public (bool, Exception) Upsert(string key, byte[] value, int ttl)
+        public OperationResult<bool> Upsert(string key, byte[] value, int ttl)
         {
             var hash = new Hash();
             var hashedKey = hash.GenerateMd5HashFromKey(key.GetBytes());
-            if (!_cache.Contains(hashedKey))
+            DateTime now = DateTime.Now;
+            if (!this.Exists(hashedKey))
             {
-                DateTime now = DateTime.Now;
                 _cache.Add(hashedKey, new Pair(ttl, now, value));
-                return (true, null);
+                return OperationResult<bool>.CreateSuccessResult(true);
             }
-            return (false, null);
+
+            _cache.Add(hashedKey, new Pair(ttl, now, value));
+            return OperationResult<bool>.CreateSuccessResult(false);
         }
 
-        public (bool, Exception) Delete(string key)
+        public OperationResult<bool> Delete(string key)
         {
             throw new NotImplementedException();
         }
