@@ -22,6 +22,13 @@ namespace CacheLibrary.Core
             return _pairs[keyHashed];
         }
 
+        public bool Delete(string keyHashed)
+        {
+            var pairSize = _pairs.Count;
+            _pairs.Remove(keyHashed);
+            return _pairs.Count < pairSize;
+        }
+
         public bool Contains(string keyHashed)
         {
             return _pairs.ContainsKey(keyHashed);

@@ -16,6 +16,7 @@ namespace Example
             // Console.WriteLine($"The MD5 hash of '{source}' is: {hash}");
             TestInsert();
             TestUpsert();
+            TestDelete();
         }
 
         private static void TestInsert()
@@ -48,6 +49,20 @@ namespace Example
 
             Console.WriteLine(result);
 
+        }
+
+        private static void TestDelete()
+        {
+            var ops = new Operations();
+            var value = ops.Delete("123");
+            if (value.Success)
+            {
+                Console.WriteLine(value.Data);
+            }
+            else
+            {
+                Console.WriteLine(value.NonSuccessMessage);
+            }
         }
     }
 }

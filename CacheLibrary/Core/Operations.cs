@@ -34,19 +34,20 @@ namespace CacheLibrary.Core
             var hash = new Hash();
             var hashedKey = hash.GenerateMd5HashFromKey(key.GetBytes());
             DateTime now = DateTime.Now;
-            if (!this.Exists(hashedKey))
-            {
-                _cache.Add(hashedKey, new Pair(ttl, now, value));
-                return OperationResult<bool>.CreateSuccessResult(true);
-            }
 
+            var result = this.Exists(hashedKey);
             _cache.Add(hashedKey, new Pair(ttl, now, value));
-            return OperationResult<bool>.CreateSuccessResult(false);
+            return OperationResult<bool>.CreateSuccessResult(result);
         }
 
         public OperationResult<bool> Delete(string key)
         {
-            throw new NotImplementedException();
+            var hash = new Hash();
+            var hashedKey = hash.GenerateMd5HashFromKey(key.GetBytes());
+
+            var result = _cache.Delete(hashedKey);
+            return result ? OperationResult<bool>.CreateSuccessResult(result)
+                          : OperationResult<bool>.CreateFailure("The given key doesn't exist");
         }
 
         public bool Exists(string key)
