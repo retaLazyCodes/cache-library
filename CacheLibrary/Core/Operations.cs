@@ -54,5 +54,10 @@ namespace CacheLibrary.Core
         {
             return _cache.Contains(key);
         }
+
+        public int Count()
+        {
+            return _cache.Count();
+        }
     }
 }

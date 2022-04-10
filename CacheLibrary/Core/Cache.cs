@@ -33,5 +33,10 @@ namespace CacheLibrary.Core
         {
             return _pairs.ContainsKey(keyHashed);
         }
+
+        public int Count()
+        {
+            return _pairs.Count;
+        }
     }
 }

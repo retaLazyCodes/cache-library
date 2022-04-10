@@ -21,5 +21,8 @@ namespace CacheLibrary.Interfaces
         // Exists checks if a key is registered.
         // Returns true if it exists, false if not, and a optional error.
         bool Exists(string key);
+
+        // Returns the total number of elements in the cache
+        int Count();
     }
 }
