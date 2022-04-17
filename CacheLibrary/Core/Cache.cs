@@ -13,8 +13,9 @@ namespace CacheLibrary.Core
 
         public bool Add(string keyHashed, Pair pair)
         {
+            var pairSize = _pairs.Count;
             _pairs[keyHashed] = pair;
-            return true;
+            return _pairs.Count > pairSize;
         }
 
         public Pair Access(string keyHashed)

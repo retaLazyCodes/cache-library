@@ -35,8 +35,7 @@ namespace CacheLibrary.Core
             var hashedKey = hash.GenerateMd5HashFromKey(key.GetBytes());
             DateTime now = DateTime.Now;
 
-            var result = this.Exists(hashedKey);
-            _cache.Add(hashedKey, new Pair(ttl, now, value));
+            var result = _cache.Add(hashedKey, new Pair(ttl, now, value));
             return OperationResult<bool>.CreateSuccessResult(result);
         }
 
